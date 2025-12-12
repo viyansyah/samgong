@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Game 41 – Kartu 52</title>
+<title>Game KARTU</title>
 <style>
   body {
     background: #212121;
@@ -52,11 +52,11 @@
 </head>
 <body>
 
-<h2>Game 41 – Kartu 52 (AS sampai K)</h2>
+<h2>Game Samgong </h2>
 
 <div id="gameBox">
 
-  <h3>Player</h3>
+  <h3>Maulana</h3>
   <div id="playerCards"></div>
   <p id="playerTotal">Total: 0</p>
 
@@ -126,8 +126,8 @@
     tampilkan("playerCards", kartu);
     document.getElementById("playerTotal").innerText = "Total: " + playerTotal;
 
-    if (playerTotal > 41) {
-      endGame("Kamu melewati 41! KALAH 😢");
+    if (playerTotal > 30) {
+      endGame("Kamu melewati 30! KALAH 😢");
     }
   }
 
@@ -143,7 +143,7 @@
 
     document.getElementById("computerTotal").innerText = "Total: " + computerTotal;
 
-    if (computerTotal > 41) endGame("Komputer lewat 41! Kamu MENANG 😎");
+    if (computerTotal > 30) endGame("Komputer lewat 30! Kamu MENANG 😎");
     else if (playerTotal > computerTotal) endGame("Kamu MENANG!");
     else if (playerTotal < computerTotal) endGame("Komputer MENANG!");
     else endGame("SERIII!");
