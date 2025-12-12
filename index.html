@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Game 41 – Kartu 52</title>
+<style>
+  body {
+    background: #212121;
+    color: #fff;
+    font-family: Arial;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #gameBox {
+    background: #333;
+    padding: 20px;
+    width: 380px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #000;
+  }
+
+  .card {
+    display: inline-block;
+    width: 60px;
+    height: 80px;
+    background: #fff;
+    color: #000;
+    border-radius: 8px;
+    margin: 5px;
+    font-size: 20px;
+    line-height: 80px;
+    font-weight: bold;
+  }
+
+  .red { color: red; }
+
+  button {
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    margin: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .take { background: #4CAF50; color: white; }
+  .stop { background: #f39c12; color: white; }
+  .reset { background: #c0392b; color: white; }
+</style>
+</head>
+<body>
+
+<h2>Game 41 – Kartu 52 (AS sampai K)</h2>
+
+<div id="gameBox">
+
+  <h3>Player</h3>
+  <div id="playerCards"></div>
+  <p id="playerTotal">Total: 0</p>
+
+  <h3>Komputer</h3>
+  <div id="computerCards"></div>
+  <p id="computerTotal">Total: 0</p>
+
+  <p id="status">Klik "Ambil Kartu" untuk mulai</p>
+
+  <button class="take" onclick="ambilKartu()">Ambil Kartu</button>
+  <button class="stop" onclick="berhenti()">Berhenti</button>
+  <button class="reset" onclick="resetGame()">Reset</button>
+
+</div>
+
+<script>
+  // Membuat deck 52 kartu AS–KS, AH–KH, AD–KD, AC–KC
+  const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+  const suits = ["♠","♥","♦","♣"]; // Spade, Heart, Diamond, Club
+  let deck = [];
+
+  function buatDeck() {
+    deck = [];
+    for (let s of suits) {
+      for (let r of ranks) {
+        deck.push(r + s);
+      }
+    }
+    deck = deck.sort(() => Math.random() - 0.5); // acak deck
+  }
+
+  // Nilai kartu
+  function nilaiKartu(k) {
+    let r = k.slice(0, -1);
+    if (r === "A") return 1;
+    if (["J","Q","K"].includes(r)) return 10;
+    return parseInt(r);
+  }
+
+  // Variabel permainan
+  let playerTotal = 0;
+  let computerTotal = 0;
+  let gameOver = false;
+
+  // Menampilkan kartu
+  function tampilkan(target, kartu) {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    // Warna merah untuk ♥ dan ♦
+    if (kartu.includes("♥") || kartu.includes("♦"))
+      div.classList.add("red");
+
+    div.textContent = kartu;
+    document.getElementById(target).appendChild(div);
+  }
+
+  // Player ambil kartu
+  function ambilKartu() {
+    if (gameOver) return;
+
+    if (deck.length === 0) return alert("Kartu habis!");
+
+    const kartu = deck.pop();
+    playerTotal += nilaiKartu(kartu);
+
+    tampilkan("playerCards", kartu);
+    document.getElementById("playerTotal").innerText = "Total: " + playerTotal;
+
+    if (playerTotal > 41) {
+      endGame("Kamu melewati 41! KALAH 😢");
+    }
+  }
+
+  // Komputer berhenti
+  function berhenti() {
+    if (gameOver) return;
+
+    while (computerTotal < 30 && computerTotal <= playerTotal && deck.length > 0) {
+      const kartu = deck.pop();
+      computerTotal += nilaiKartu(kartu);
+      tampilkan("computerCards", kartu);
+    }
+
+    document.getElementById("computerTotal").innerText = "Total: " + computerTotal;
+
+    if (computerTotal > 41) endGame("Komputer lewat 41! Kamu MENANG 😎");
+    else if (playerTotal > computerTotal) endGame("Kamu MENANG!");
+    else if (playerTotal < computerTotal) endGame("Komputer MENANG!");
+    else endGame("SERIII!");
+  }
+
+  // Mengakhiri game
+  function endGame(msg) {
+    gameOver = true;
+    document.getElementById("status").innerText = msg;
+  }
+
+  // Reset permainan
+  function resetGame() {
+    playerTotal = 0;
+    computerTotal = 0;
+    gameOver = false;
+
+    document.getElementById("playerCards").innerHTML = "";
+    document.getElementById("computerCards").innerHTML = "";
+    document.getElementById("playerTotal").innerText = "Total: 0";
+    document.getElementById("computerTotal").innerText = "Total: 0";
+    document.getElementById("status").innerText = "Klik \"Ambil Kartu\" untuk mulai";
+
+    buatDeck();
+  }
+
+  // Buat deck pertama
+  buatDeck();
+</script>
+
+</body>
+</html>
